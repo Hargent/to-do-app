@@ -13,8 +13,10 @@ def add_todo(
         todo_data: TodoSchema,
 ):
     todo: TodoModel = TodoModel(
-        text=todo_data.text,
-        completed=todo_data.completed,
+        title=todo_data.title,
+        description=todo_data.description,
+        is_completed=todo_data.is_completed,
+        due_date=todo_data.due_date
     )
     todo.owner = current_user
     db.add(todo)
@@ -30,8 +32,10 @@ def update_todo(
     todo: TodoModel = db.query(TodoModel).filter(
         TodoModel.id == new_todo.id,
     ).first()
-    todo.text = new_todo.text
-    todo.completed = new_todo.completed
+    todo.title = new_todo.title
+    todo.description = new_todo.description
+    todo.is_completed = new_todo.is_completed
+    todo.due_date = new_todo.due_date
     db.commit()
     db.refresh(todo)
     return todo

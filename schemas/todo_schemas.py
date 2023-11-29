@@ -2,8 +2,10 @@ from pydantic import BaseModel
 
 
 class TodoBaseSchema(BaseModel):
-    text: str
-    completed: bool
+    title: str
+    description: str
+    is_completed: bool
+    due_date: str
 
 
 class TodoSchema(TodoBaseSchema):
