@@ -43,7 +43,10 @@ def get_user(email: str, db: Session = Depends(get_db)) -> UserSchema:
     if user:
         return user
     else:
-        return {'message': 'user not found'}, 404
+        raise HTTPException(
+            status_code=404,
+            detail=f"No User with email: {email}"
+        )
 
 
 @user_router.post("", response_model=UserWithTokenSchema, summary="Signup as a new user")
@@ -91,7 +94,7 @@ def login_for_access_token(
     Login/Signin with the following information:
 
     - **email**: This is required
-    - **password**: THis is required
+    - **password**: This is required
 
     **NB** : username is treated as email
     """
@@ -110,10 +113,15 @@ def login_for_access_token(
     return {'access_token': access_token, 'token_type': 'bearer'}
 
 
-@user_router.get("/me", response_model=UserSchema, summary="get the currently logged in user")
+@user_router.get("me", response_model=UserSchema, summary="get the currently logged in user")
 def get_current_user(user_data: UserModel = Depends(get_current_user)):
     """
-    This endpoints exposes hthe currently authenticated user
+    This endpoints exposes the currently authenticated user
     """
 
+    if user_data is None:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated",
+        )
     return user_data
