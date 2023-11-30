@@ -13,8 +13,11 @@ from schemas.todo_schemas import TodoSchema, TodoBaseSchema, TodoUpdateSchema, T
 todo_router = APIRouter()
 
 
-@todo_router.get('', response_model=List[TodoResponseSchema])
+@todo_router.get('', response_model=List[TodoResponseSchema], summary="get todos for current user")
 def get_my_todos_view(db: Session = Depends(get_db), current_user: UserModel = Depends(get_current_user)):
+    """
+    Returns a list of all todos for the currently logged in user
+    """
     todos = todo_crud.get_user_todos(db, current_user)
     return todos
 

@@ -10,6 +10,6 @@ class TodoModel(Base):
     title = Column(Text)
     description = Column(Text)
     is_completed = Column(Boolean, default=False)
-    due_date = Column(DateTime)
+    due_date = Column(Text)
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("UserModel", back_populates="todos")
