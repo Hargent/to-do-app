@@ -13,7 +13,7 @@ from crud.user_crud import get_current_user
 from db import get_db
 from models.usermodel import UserModel
 from schemas.token_schemas import TokenSchema
-from schemas.user_schemas import UserSchema, UserCreateSchema
+from schemas.user_schemas import UserSchema, UserCreateSchema, UserWithTokenSchema
 from utils.security import authenticate_user, create_access_token
 
 from dotenv import load_dotenv
@@ -46,7 +46,7 @@ def get_user(email: str, db: Session = Depends(get_db)) -> UserSchema:
         return {'message': 'user not found'}, 404
 
 
-@user_router.post("", response_model=UserSchema, summary="Signup as a new user")
+@user_router.post("", response_model=UserWithTokenSchema, summary="Signup as a new user")
 def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
     """
     Create a new user with the following information:
@@ -68,10 +68,17 @@ def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
     token_expires_date = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     # Generate an access token for the new user
     access_token = create_access_token(
-        data={'sub': user_data.email},
+        data={'sub': new_user.email},
         expires_delta=token_expires_date,
     )
-    return {"user": new_user, "access_token": access_token, "token_type": "bearer"}
+    response = {
+        'email': new_user.email,
+        'first_name': new_user.first_name,
+        'last_name': new_user.last_name,
+        'access_token': access_token,
+        'token_type': 'bearer'
+    }
+    return response
 
 
 @user_router.post("/login", response_model=TokenSchema, summary="Login using email and password")

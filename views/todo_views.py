@@ -22,12 +22,21 @@ def get_my_todos_view(db: Session = Depends(get_db), current_user: UserModel = D
     return todos
 
 
-@todo_router.post('', response_model=List[TodoResponseSchema])
+@todo_router.post('', response_model=List[TodoResponseSchema], summary="create todo")
 def add_todo_view(
         todo_data: TodoBaseSchema,
         db: Session = Depends(get_db),
         current_user: UserModel = Depends(get_current_user),
 ):
+    """
+    Create a new Todo with the following information:
+
+    - **title**: 
+    - **description**: 
+    - **is_completed**: A boolean
+    - **due_date**: due_date
+    
+    """
     todo_crud.add_todo(
         db,
         current_user,
@@ -43,6 +52,16 @@ def update_todo_view(
         db: Session = Depends(get_db),
         current_user: UserModel = Depends(get_current_user),
 ):
+    """
+    Update existing Todo with the following information:
+
+    - **title**: e
+    - **description**: 
+    - **is_completed**: 
+    - **due_date**: 
+    - **id**:
+    
+    """
     todo_crud.update_todo(
         db,
         new_todo=todo_data,
@@ -51,12 +70,15 @@ def update_todo_view(
     return todos
 
 
-@todo_router.delete('/{todo_id:int}', response_model=List[TodoResponseSchema])
+@todo_router.delete('/{todo_id:int}', response_model=List[TodoResponseSchema], summary="delete a todo item")
 def delete_todo_view(
         todo_id: int,
         db: Session = Depends(get_db),
         current_user: UserModel = Depends(get_current_user)
 ):
+    """
+    Delete a todo itemp
+    """
     todo_crud.delete_todo(db, todo_id)
     todos = todo_crud.get_user_todos(db, current_user)
     return todos
