@@ -64,7 +64,13 @@ def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
             detail="email exist",
         )
     new_user = user_crud.add_user(db, user_data)
-    return new_user
+
+    # Generate an access token for the new user
+    access_token = create_access_token(
+        data={'sub': user_data.email},
+        expires_delta=token_expires_date,
+    )
+    return {"user": new_user, "access_token": access_token, "token_type": "bearer"}
 
 
 @user_router.post("/login", response_model=TokenSchema, summary="Login using email and password")
