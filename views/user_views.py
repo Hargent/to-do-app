@@ -65,6 +65,7 @@ def sign_up(user_data: UserCreateSchema, db: Session = Depends(get_db)):
         )
     new_user = user_crud.add_user(db, user_data)
 
+    token_expires_date = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     # Generate an access token for the new user
     access_token = create_access_token(
         data={'sub': user_data.email},
