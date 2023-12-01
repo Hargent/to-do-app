@@ -11,7 +11,7 @@ from starlette import status
 from db import get_db
 from models.usermodel import UserModel
 from schemas.user_schemas import UserSchema, UserCreateSchema
-from utils.security import hash_password
+from utils.security import hash_password, is_token_valid
 from schemas.token_schemas import TokenDataSchema
 
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -49,6 +49,9 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         detail="Invalid JWT",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    if not is_token_valid(token):
+        raise credential_exception
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get('sub')

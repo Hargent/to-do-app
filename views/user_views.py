@@ -14,7 +14,7 @@ from db import get_db
 from models.usermodel import UserModel
 from schemas.token_schemas import TokenSchema
 from schemas.user_schemas import UserSchema, UserCreateSchema, UserWithTokenSchema
-from utils.security import authenticate_user, create_access_token
+from utils.security import authenticate_user, create_access_token, invalidate_access_token
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -125,3 +125,14 @@ def get_current_user(user_data: UserModel = Depends(get_current_user)):
             detail="Not authenticated",
         )
     return user_data
+
+@user_router.post("/logout", summary="Logout and invalidate the access token")
+def logout(current_user: UserModel = Depends(get_current_user), db: Session = Depends(get_db)):
+    """
+    Log out the currently authenticated user and invalidate the access token.
+    """
+    
+    # Invalidate the access token
+    invalidate_access_token(current_user.email, db)
+    
+    return {"message": "Logout successful"}

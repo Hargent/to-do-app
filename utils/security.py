@@ -1,14 +1,16 @@
 import os
 from datetime import timedelta, datetime
-from typing import Union, Optional
+from typing import Union, Optional, Set
 
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.params import Depends
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 from jose import jwt, JWTError
 
 from crud import user_crud
 from models.usermodel import UserModel
+from db import get_db
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -16,6 +18,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = os.getenv('ALGORITHM')
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))
+INVALIDATED_TOKENS: Set[str] = set()
 
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -28,6 +31,15 @@ def hash_password(plain_password: str) -> str:
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+def invalidate_access_token(email: str, db: Session = Depends(get_db)):
+    """
+    Invalidate the access token for a user by adding it to the set of invalidated tokens.
+    """
+    user = user_crud.get_user_by_email(db, email)
+    if user:
+        token_data = {"sub": user.email}
+        access_token = create_access_token(data=token_data)
+        INVALIDATED_TOKENS.add(access_token)
 
 def authenticate_user(db: Session, email: str, password: str) -> Union[bool, UserModel]:
     user: UserModel = user_crud.get_user_by_email(db, email)
@@ -48,3 +60,14 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+def is_token_valid(token: str):
+    """
+    Check if a token is valid by verifying it and ensuring it is not in the set of invalidated tokens.
+    """
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        if payload["sub"] in INVALIDATED_TOKENS:
+            return False
+        return True
+    except JWTError:
+        return False
