@@ -21,6 +21,21 @@ def get_my_todos_view(db: Session = Depends(get_db), current_user: UserModel = D
     todos = todo_crud.get_user_todos(db, current_user)
     return todos
 
+@todo_router.get('/{todo_id}', response_model=TodoResponseSchema, summary="Get a todo by ID")
+def get_todo_by_id_view(
+        todo_id: int,
+        db: Session = Depends(get_db),
+        current_user: UserModel = Depends(get_current_user),
+):
+    """
+    Get a todo by its ID.
+    """
+    todo = todo_crud.get_todo_by_id(db, todo_id)
+    if todo is None:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    
+    return todo
+
 
 @todo_router.post('', response_model=List[TodoResponseSchema], summary="create todo")
 def add_todo_view(

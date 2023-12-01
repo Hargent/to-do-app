@@ -30,6 +30,7 @@ def get_todo_by_id(db: Session, todo_id: int) -> TodoModel:
     """
     return db.query(TodoModel).filter(TodoModel.id==todo_id).first()
 
+
 def update_todo(
         db: Session,
         current_user: UserModel,
