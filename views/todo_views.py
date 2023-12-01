@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
@@ -8,7 +8,7 @@ import crud.todo_crud as todo_crud
 from crud.user_crud import get_current_user
 from db import get_db
 from models.usermodel import UserModel
-from schemas.todo_schemas import TodoSchema, TodoBaseSchema, TodoUpdateSchema, TodoResponseSchema
+from schemas.todo_schemas import TodoSchema, TodoBaseSchema, TodoResponseSchema
 
 todo_router = APIRouter()
 
@@ -46,28 +46,32 @@ def add_todo_view(
     return todos
 
 
-@todo_router.put('', response_model=List[TodoResponseSchema])
+@todo_router.put('{todo_id}', response_model=TodoResponseSchema, summary="Update a todo by ID")
 def update_todo_view(
-        todo_data: TodoUpdateSchema,
+        todo_id: int,
+        todo_data: TodoBaseSchema,
         db: Session = Depends(get_db),
         current_user: UserModel = Depends(get_current_user),
 ):
     """
     Update existing Todo with the following information:
 
-    - **title**: e
-    - **description**: 
-    - **is_completed**: 
-    - **due_date**: 
-    - **id**:
+    - **title**
+    - **description**
+    - **is_completed**
+    - **due_date**
+
     
     """
-    todo_crud.update_todo(
-        db,
-        new_todo=todo_data,
-    )
-    todos = todo_crud.get_user_todos(db, current_user)
-    return todos
+    existing_todo = todo_crud.get_todo_by_id(db, todo_id)
+    if existing_todo is None:
+        raise HTTPException(status_code=404, detail="Todo not found")
+    
+    # Update todo fields
+    updated_todo = todo_crud.update_todo(db, current_user, todo_data)
+    
+
+    return updated_todo
 
 
 @todo_router.delete('/{todo_id:int}', response_model=List[TodoResponseSchema], summary="delete a todo item")

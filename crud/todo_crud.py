@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from models.todomodel import TodoModel
 from models.usermodel import UserModel
-from schemas.todo_schemas import TodoSchema, TodoUpdateSchema
+from schemas.todo_schemas import TodoSchema, TodoBaseSchema
 
 
 def add_todo(
@@ -24,22 +24,31 @@ def add_todo(
     db.refresh(todo)
     return todo
 
+def get_todo_by_id(db: Session, todo_id: int) -> TodoModel:
+    """
+    Get a todo by its ID.
+    """
+    return db.query(TodoModel).filter(TodoModel.id==todo_id).first()
 
 def update_todo(
         db: Session,
-        new_todo: TodoUpdateSchema,
+        current_user: UserModel,
+        new_todo: TodoBaseSchema,
 ):
-    todo: TodoModel = db.query(TodoModel).filter(
-        TodoModel.id == new_todo.id,
-    ).first()
+    todo: TodoModel = get_todo_by_id(db, TodoModel.id)
+    print(todo.title)
+    print(new_todo.title)
+    
     todo.title = new_todo.title
+    print(todo.title)
     todo.description = new_todo.description
     todo.is_completed = new_todo.is_completed
     todo.due_date = new_todo.due_date
+    todo.owner = current_user
     db.commit()
     db.refresh(todo)
-    return todo
 
+    return todo
 
 def delete_todo(
         db: Session,

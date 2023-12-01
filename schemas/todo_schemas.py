@@ -19,6 +19,4 @@ class TodoResponseSchema(TodoSchema):
     id: int
 
 
-class TodoUpdateSchema(TodoBaseSchema):
-    id: int
 
