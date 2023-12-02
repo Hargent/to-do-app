@@ -12,7 +12,8 @@ app = FastAPI(openapi_url="/openapi.json")
 
 origins = [
     "http://localhost:3000",
-    "localhost:3000"
+    "localhost:3000",
+    "https://to-do-app-cre8gen-interns.netlify.app/"
 ]
 
 
