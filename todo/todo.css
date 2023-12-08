@@ -121,6 +121,7 @@ img {
     align-items: center;
     justify-content: center;
     margin: 0;
+    margin-bottom: 0 !important;
   }
 }
 .btn-logout {
@@ -165,6 +166,9 @@ img {
 
   align-self: center;
   justify-self: center;
+  & > p {
+    text-align: center;
+  }
 }
 /* Modal */
 .close-modal {
@@ -205,7 +209,9 @@ input {
   box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.25),
     inset 2px 2px 5px rgba(0, 0, 0, 0.5), inset -3px -3px 5px rgba(0, 0, 0, 0.5);
 }
-.i {
+.modal-btn {
+  width: 40%;
+  align-self: flex-end;
   padding: 10px 20px;
   border: none;
   background-color: orange;
@@ -219,22 +225,23 @@ input {
     pointer-events: none;
   }
 }
-.i:hover {
+.modal-btn:hover {
   background-color: #fff;
   color: orange;
 }
 .app__tasks-controls {
-  width: 70%;
+  width: 100%;
   margin: auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 5rem;
 }
-.app__tasks-controls > *:not(:last-child) {
+/* .app__tasks-controls > *:not(:last-child) {
   margin-right: 2rem;
-}
+} */
 .app__tasks-control {
-  margin-left: 5rem;
+  /* margin-left: 5rem; */
   padding: 10px 20px;
   border: none;
   text-align: center;
@@ -249,6 +256,7 @@ input {
   cursor: pointer;
   /* transition: var(--transition); */
 }
+
 .active {
   background-color: orange;
   color: white;
@@ -296,6 +304,11 @@ input {
   }
   & button {
     align-self: flex-end;
+  }
+}
+@media only screen and (max-width: 600px) {
+  .app__tasks-modal--content {
+    width: 90%;
   }
 }
 .taskk {
@@ -376,6 +389,25 @@ li::after {
     text-transform: capitalize;
     font-weight: bold;
     color: orange;
+  }
+}
+.app__todo-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* margin-bottom: 4rem; */
+  & h1 {
+    text-align: center;
+    font-size: 4rem;
+    font-weight: bold;
+  }
+  & p {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
   }
 }
 /* JS controlled Styles */
@@ -475,15 +507,27 @@ li::after {
 .task-item {
   background: #000;
   width: 100%;
-  display: grid;
-  grid-template-columns: 5% 50% 25% 10%;
-  column-gap: 2%;
+  /* display: grid; */
+  /* grid-template-columns: 5% 50% 25% 10%; */
+  /* column-gap: 2%; */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 2rem;
   border-radius: 10px;
   transition: var(--transition);
   cursor: default;
 
   box-shadow: 2px 2px 2px 4px rgba(128, 128, 128, 0.13);
+}
+.task-item-intro {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 2rem;
 }
 .task-item-details {
   display: flex;
@@ -499,6 +543,12 @@ li::after {
     text-transform: uppercase;
     font-weight: 700;
     font-size: 2rem;
+  }
+  & > *:last-child {
+    width: 80%;
+
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
 }
 .task-item-date {
@@ -532,6 +582,12 @@ li::after {
       color: currentColor;
     }
   }
+}
+.task-item-content {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 /* customized checkbox */
@@ -577,11 +633,13 @@ li::after {
   align-items: center;
   justify-content: center;
   & input {
+    padding: 0%;
     appearance: none;
-    width: 1rem;
-    height: 2rem;
+    width: 3rem !important;
+    height: 3rem !important;
     border-radius: 4px;
     border: 1px solid orange;
+    margin: auto;
     &:checked {
       background: orange;
     }
@@ -609,5 +667,130 @@ li::after {
 
   & label {
     font-size: 2rem;
+  }
+}
+
+/* MEDIA QUERY */
+@media only screen and (max-width: 1200px) {
+  .task-item-btns {
+    & > *:first-child {
+      margin-right: 1.5rem;
+    }
+    & button {
+      padding: 1.5rem;
+
+      & i {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 900px) {
+  .task-item-details {
+    & > *:first-child {
+      margin-bottom: 0.75rem;
+
+      font-size: 1.5rem;
+    }
+  }
+  .task-item-date {
+    font-weight: 500;
+    font-size: 1.2rem;
+  }
+  .task-item-btns {
+    & > *:first-child {
+      margin-right: 1.2rem;
+    }
+    & button {
+      padding: 1rem;
+
+      & i {
+        font-size: 1.2rem;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 600px) {
+  .app__container {
+    width: 100%;
+  }
+  .app__tasks-controls {
+    gap: 2rem;
+  }
+  .task-item-details {
+    & > *:first-child {
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+
+      font-size: 1.2rem;
+    }
+  }
+  .task-item-date {
+    font-weight: 500;
+    font-size: 1rem;
+  }
+  .task-item-btns {
+    & > *:first-child {
+      margin-right: 0.8rem;
+    }
+    & button {
+      padding: 0.75rem;
+
+      & i {
+        font-size: 1.5rem;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 400px) {
+  .app__tasks-control {
+    /* margin-left: 5rem; */
+    padding: 5px 10px;
+
+    font-size: 1rem;
+
+    /* transition: var(--transition); */
+  }
+  .app__tasks-controls {
+    gap: 1rem;
+  }
+  .app__todo-title {
+    & h1 {
+      font-size: 3rem;
+    }
+    & p {
+      font-size: 1.5rem;
+    }
+  }
+  .user-profile {
+    & > *:not(:first-child) {
+      margin-left: 1rem;
+    }
+    & p {
+      font-size: 1.5rem;
+    }
+  }
+  .modal-btn {
+    width: 100%;
+  }
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .task-item-date {
+    font-size: 1.5rem;
+  }
+  .task-item-details {
+    & > *:first-child {
+      /* font-size: 2rem; */
+
+      &::after {
+        content: " : ";
+        margin-left: 1rem;
+      }
+    }
+    & > *:last-child {
+      font-size: 0.75rem;
+    }
   }
 }

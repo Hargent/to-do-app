@@ -1,6 +1,6 @@
 //! UPDATE UI ON DATA Change
 
-import { env } from "node:process";
+// import { env } from "node:process";
 
 export function renderTasks({ tasks, id }) {
   // console.log(tasks, id, "is the tab data");
@@ -22,6 +22,7 @@ function createTaskElement(task) {
   taskElement.setAttribute("id", task.id);
 
   taskElement.innerHTML = `
+  <div class="task-item-intro">
   <div class="task-checkbox">
   <input type="checkbox" ${task.is_completed ? "checked" : ""}  data-id=${
     task.id
@@ -31,14 +32,17 @@ function createTaskElement(task) {
     <p>${task.title}</p>
     <p>${task.description}</p>
   </div>
+  </div>
+  <div class="task-item-content">
   <p class="task-item-date">${task.due_date}</p>
   <div class="task-item-btns">
-    <button  class="edit-task"  data-id=${
+    <button  class=" item-btn edit-task"  data-id=${
       task.id
     } ><i class="btn-icon fas fa-edit"></i></button>
-    <button class="delete-task" data-id=${
+    <button class=" item-btn delete-task" data-id=${
       task.id
     }><i class=" btn-icon fa-solid fa-trash-can"></i></button>
+  </div>
   </div>
             
                     `;
@@ -49,16 +53,16 @@ export function router(path) {
   console.log(path, "This is the next path");
   if (!path) return;
 
-  const base_path =
-    env.NODE_ENV === "production"
-      ? env.BASE_URL
-      : "http://localhost:3000/";
-      console.log(base_path);
+  // const base_path =
+  //   env.NODE_ENV === "production"
+  //     ? env.BASE_URL
+  //     : "http://localhost:3000/";
+  //     console.log("This is the base path : ",base_path);
   // Specify the URL of the success page
   // const successPageURL = "/success";
   // const new_path = `${base_path}${path}`;
-  // const new_path = `http://localhost:3000/${path}`;
-  const new_path = `https://to-do-app-cre8gen-interns.netlify.app${path}`;
+  const new_path = `http://localhost:3000${path}`;
+  // const new_path = `https://to-do-app-cre8gen-interns.netlify.app${path}`;
   // console.log(new_path);
 
   // Redirect to the success page

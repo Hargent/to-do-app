@@ -410,7 +410,7 @@ async function generateEditForm(taskId) {
             targetTask.is_completed ? "checked" : ""
           } />
         </div>
-        <button class="i" type="submit">
+        <button class="modal-btn" type="submit">
           <i class="fa-solid fa-edit"></i>
           <span>Update</span>
         </button>
