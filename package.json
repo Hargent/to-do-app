@@ -22,7 +22,6 @@
     "js-cookie": "^3.0.5",
     "parcel": "^2.10.3"
   },
-  "main": "script.js",
   "devDependencies": {},
   "keywords": [
     "Crea8Genius"
