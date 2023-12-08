@@ -7,7 +7,7 @@ const signupBtn = document.getElementById("signup-btn");
 const signUpForm = document.getElementById("signUpForm");
 // parsley.init(form);
 async function signUpUser({ signUpData }) {
-  console.log(signUpData, "is the signup data");
+  // console.log(signUpData, "is the signup data");
   const signedUpUser = await fetch(
     `https://todo-fastapi-338k.onrender.com/api/users`,
     {
@@ -39,7 +39,8 @@ signUpForm.addEventListener("submit", function (event) {
   // });
   signUpUser({ signUpData: signUpFormObject })
     .then((user) => {
-      console.log(user);
+      // console.log(user);
+
       if (Object.keys(user).length > 0) {
         Cookies.set("user_access_token", user.access_token, { path: "/" });
         // const todoRoute =
@@ -73,7 +74,7 @@ const showIcon = document.getElementById("show-password");
 const hideIcon = document.getElementById("hide-password");
 
 toggleButton.addEventListener("click", () => {
-  console.log(passwordInput, toggleButton);
+  // console.log(passwordInput, toggleButton);
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
     hideIcon.classList.remove("hidden");

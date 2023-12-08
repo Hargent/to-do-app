@@ -50,7 +50,7 @@ function createTaskElement(task) {
 }
 //! Routing
 export function router(path) {
-  console.log(path, "This is the next path");
+  // console.log(path, "This is the next path");
   if (!path) return;
 
   // const base_path =
@@ -61,8 +61,8 @@ export function router(path) {
   // Specify the URL of the success page
   // const successPageURL = "/success";
   // const new_path = `${base_path}${path}`;
-  const new_path = `http://localhost:3000${path}`;
-  // const new_path = `https://to-do-app-cre8gen-interns.netlify.app${path}`;
+  // const new_path = `http://localhost:3000${path}`;
+  const new_path = `https://to-do-app-cre8gen-interns.netlify.app${path}`;
   // console.log(new_path);
 
   // Redirect to the success page

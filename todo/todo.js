@@ -287,7 +287,7 @@ tabWindows.forEach((window) => {
       deleteTask(Number(target.dataset.id));
     }
     if (target.classList.value === "edit-task") {
-      console.log("editing task : ", target.dataset.id);
+      // console.log("editing task : ", target.dataset.id);
       generateEditForm(target.dataset.id);
     }
     if (target.classList.value === "task-status") {
